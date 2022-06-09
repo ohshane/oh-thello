@@ -9,8 +9,7 @@ import numpy as np
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 
-# 패키지 임포트
-from components import State
+from game import State
 from pv_mcts import pv_mcts_action
 
 # 파라미터 준비
@@ -22,7 +21,7 @@ EN_TEMPERATURE = 1.0  # 볼츠만 분포 온도
 def first_player_point(ended_state):
     # 1: 선 수 플레이어 승리, 0: 선 수 플레이어 패배, 0.5: 무승부
     if ended_state.is_lose():
-        return 0 if ended_state.is_black() else 1
+        return 0 if ended_state.is_first_player() else 1
     return 0.5
 
 
@@ -38,7 +37,7 @@ def play(next_actions):
             break
 
         # 행동 얻기
-        next_action = next_actions[0] if state.is_black() else next_actions[1]
+        next_action = next_actions[0] if state.is_first_player() else next_actions[1]
         action = next_action(state)
 
         # 다음 상태 얻기

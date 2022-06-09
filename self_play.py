@@ -10,13 +10,11 @@ from pathlib import Path
 import numpy as np
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
-
-# 패키지 임포트
-from components import State
-from dual_network import DN_OUTPUT_SIZE
-from misc import *
-from pv_mcts import pv_mcts_scores
 from tqdm import tqdm
+
+from dual_network import DN_OUTPUT_SIZE
+from game import State
+from pv_mcts import pv_mcts_scores
 
 # 파라미터 준비
 SP_GAME_COUNT = 500  # 셀프 플레이를 수행할 게임 수(오리지널: 25,000)
@@ -27,7 +25,7 @@ SP_TEMPERATURE = 1.0  # 볼츠만 분포의 온도 파라미터
 def first_player_value(ended_state):
     # 1: 선 수 플레이어 승리, -1: 선 수 플레이어 패배, 0: 무승부
     if ended_state.is_lose():
-        return -1 if ended_state.is_black() else 1
+        return -1 if ended_state.is_first_player() else 1
     return 0
 
 
@@ -59,18 +57,15 @@ def play(model):
 
         # 학습 데이터에 상태와 정책 추가
         policies = [0] * DN_OUTPUT_SIZE
-        for action, policy in zip(state.legal_actions(flatten=True), scores):
+        for action, policy in zip(state.legal_actions(), scores):
             policies[action] = policy
         history.append([[state.pieces, state.enemy_pieces], policies, None])
 
         # 행동 얻기
-        action = np.random.choice(state.legal_actions(flatten=True), p=scores)
+        action = np.random.choice(state.legal_actions(), p=scores)
 
         # 다음 상태 얻기
-        action = [action//ROW, action%ROW]
         state = state.next(action)
-
-        print(history)
 
     # 학습 데이터에 가치 추가
     value = first_player_value(state)

@@ -1,26 +1,41 @@
+from itertools import chain
+
 ROW = 8
 COL = 8
 SIZE = (ROW, COL)
+BLOCKS = []
 
-DIRECTIONS = (
-    (-1, 0),  # N
-    (-1, 1),  # NE
-    ( 0, 1),  # E
-    ( 1, 1),  # SE
-    ( 1, 0),  # S
-    ( 1,-1),  # SW
-    ( 0,-1),  # W
-    (-1,-1),  # NW
-)
+CUSTOM = True
 
 EMPTY = 0
 BLOCK = 1
 BLACK = 2
 WHITE = 3
-PLACEABLE = 4
 
-VISUAL_EMPTY = '·'
-VISUAL_BLOCK = ' '
-VISUAL_BLACK = '●'
-VISUAL_WHITE = '◯'
-VISUAL_PLACEABLE = '*'
+C_EMPTY = '·'
+C_BLOCK = ' '
+C_BLACK = '●'
+C_WHITE = '◯'
+C_LEGAL = '*'
+
+board = \
+'''
+000000
+000000
+000000
+000000
+000000
+000000
+'''
+
+if CUSTOM:
+    board = board.split()
+    if not all([len(row) == len(board[0]) for row in board]):
+        raise Exception('shape error')
+    if not set(chain.from_iterable(board)).issubset({'0','1'}):
+        raise Exception('value error')
+    
+    ROW = len(board)
+    COL = len(board[0])
+
+    BLOCKS = [i for i, c in enumerate(chain.from_iterable(board)) if c == '1']

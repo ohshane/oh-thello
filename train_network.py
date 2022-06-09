@@ -2,16 +2,14 @@
 # 파라미터 갱신 파트
 # ====================
 
-import pickle
-from pathlib import Path
-
-import numpy as np
-from tensorflow.keras import backend as K
-from tensorflow.keras.callbacks import LambdaCallback, LearningRateScheduler
-from tensorflow.keras.models import load_model
-
 # 패키지 임포트
 from dual_network import DN_INPUT_SHAPE
+from tensorflow.keras.callbacks import LearningRateScheduler, LambdaCallback
+from tensorflow.keras.models import load_model
+from tensorflow.keras import backend as K
+from pathlib import Path
+import numpy as np
+import pickle
 
 # 파라미터 준비
 RN_EPOCHS = 100  # 학습 횟수

@@ -2,15 +2,12 @@
 # 몬테카를로 트리 탐색 생성
 # ====================
 
-from math import sqrt
-from pathlib import Path
-
-import numpy as np
-from tensorflow.keras.models import load_model
-
-# 패키지 임포트
-from components import State
+from game import State
 from dual_network import DN_INPUT_SHAPE
+from math import sqrt
+from tensorflow.keras.models import load_model
+from pathlib import Path
+import numpy as np
 
 # 파라미터 준비
 PV_EVALUATE_COUNT = 50  # 추론 1회당 시뮬레이션 횟수(오리지널: 1600회)
@@ -20,14 +17,14 @@ PV_EVALUATE_COUNT = 50  # 추론 1회당 시뮬레이션 횟수(오리지널: 16
 def predict(model, state):
     # 추론을 위한 입력 데이터 셰이프 변환
     a, b, c = DN_INPUT_SHAPE
-    x = np.array([state.pieces.flatten(), state.enemy_pieces.flatten(), state.block_pieces.flatten()])
+    x = np.array([state.pieces, state.enemy_pieces])
     x = x.reshape(c, a, b).transpose(1, 2, 0).reshape(1, a, b, c)
 
     # 추론
     y = model.predict(x, batch_size=1)
 
     # 정책 얻기
-    policies = y[0][0][list(state.legal_actions(flatten=True))]  # 합법적인 수만
+    policies = y[0][0][list(state.legal_actions())]  # 합법적인 수만
     policies /= sum(policies) if sum(policies) else 1  # 합계 1의 확률분호로 변환
 
     # 가치 얻기

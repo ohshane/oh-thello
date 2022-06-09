@@ -5,7 +5,6 @@
 import os
 
 from tensorflow.keras import backend as K
-# 패키지 임포트
 from tensorflow.keras.layers import (Activation, Add, BatchNormalization,
                                      Conv2D, Dense, GlobalAveragePooling2D,
                                      Input)
@@ -17,7 +16,7 @@ from misc import *
 # 파라미터 준비
 DN_FILTERS = 128  # 컨볼루션 레이어 커널 수(오리지널: 256))
 DN_RESIDUAL_NUM = 16  # 레지듀얼 블록 수(오리지널: 19)
-DN_INPUT_SHAPE = (ROW, COL, 3)  # 입력 셰이프
+DN_INPUT_SHAPE = (ROW, COL, 2)  # 입력 셰이프
 DN_OUTPUT_SIZE = ROW*COL+1  # 행동 수(배치 위치(6*6) + 패스(1))
 
 
